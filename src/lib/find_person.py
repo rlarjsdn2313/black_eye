@@ -1,5 +1,6 @@
 import os
 
+
 class FindPerson:
     def __init__(self):
         self.name = None
