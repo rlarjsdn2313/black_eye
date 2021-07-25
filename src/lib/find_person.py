@@ -1,13 +1,19 @@
 import os
+import time
+from selenium import webdriver
 
 
 class FindPerson:
-    def __init__(self):
+    def __init__(self, web_driver_path: str):
         self.name = None
         # [year, month, day]
         self.birth = [None, None, None]
         # man, woman
         self.gender = None
+
+        self.web_driver_path = web_driver_path
+
+        self.facebook_basic_url = 'https://ko-kr.facebook.com/public/'
 
     def show_identity(self):
         print('=====IDENTITY=====')
@@ -37,18 +43,31 @@ class FindPerson:
                 self.gender = str(input('Input gender(ex. man or woman) : '))
 
                 if self.gender != 'man' and self.gender != 'woman':
+                    print('[!]Please Follow The Format')
                     continue
 
                 break
             except []:
                 print('[!]Please Follow The Format')
+
         os.system('cls')
 
     def facebook_search(self):
-        search_url = f'ko-kr.facebook.com/public/{self.name}'
+        # set url to search
+        search_url = self.facebook_basic_url + self.name
+
+        # create driver
+        driver = webdriver.Chrome(executable_path=self.web_driver_path)
+
+        # wait
+        time.sleep(2)
+
+        # go to search url
+        driver.get(search_url)
 
 
-a = FindPerson()
+a = FindPerson(web_driver_path=f'{os.getcwd()}\\chromedriver.exe')
 
 a.get_identity()
 a.show_identity()
+a.facebook_search()
