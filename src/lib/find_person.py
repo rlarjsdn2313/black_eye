@@ -43,6 +43,9 @@ class FindPerson:
                 print('[!]Please Follow The Format')
         os.system('cls')
 
+    def facebook_search(self):
+        search_url = f'ko-kr.facebook.com/public/{self.name}'
+
 
 a = FindPerson()
 
