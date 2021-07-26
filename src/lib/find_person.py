@@ -1,5 +1,6 @@
 import os
 import time
+
 from selenium import webdriver
 
 
@@ -12,6 +13,13 @@ class FindPerson:
         self.gender = None
 
         self.web_driver_path = web_driver_path
+
+        options = webdriver.ChromeOptions()
+        options.add_experimental_option('excludeSwitches', ['enable-logging'])
+
+        self.driver = webdriver.Chrome(executable_path=self.web_driver_path, options=options)
+
+        self.scroll_second = 3
 
         self.facebook_basic_url = 'https://ko-kr.facebook.com/public/'
 
@@ -35,6 +43,7 @@ class FindPerson:
 
                 break
             except []:
+                os.system('cls')
                 print('[!]Please Follow The Format')
         os.system('cls')
 
@@ -43,27 +52,47 @@ class FindPerson:
                 self.gender = str(input('Input gender(ex. man or woman) : '))
 
                 if self.gender != 'man' and self.gender != 'woman':
+                    os.system('cls')
                     print('[!]Please Follow The Format')
                     continue
 
                 break
             except []:
+                os.system('cls')
                 print('[!]Please Follow The Format')
 
         os.system('cls')
+
+    def scroll_to_bottom(self):
+        last_height = self.driver.execute_script('return document.body.scrollHeight')
+
+        # scroll to bottom
+        while True:
+            self.driver.execute_script('window.scrollTo(0, document.body.scrollHeight);')
+            time.sleep(self.scroll_second)
+            new_height = self.driver.execute_script('return document.body.scrollHeight')
+
+            if new_height == last_height:
+                break
+
+            last_height = new_height
+
+        # go to top
+        self.driver.execute_script('window.scrollTo(0, 0);')
 
     def facebook_search(self):
         # set url to search
         search_url = self.facebook_basic_url + self.name
 
-        # create driver
-        driver = webdriver.Chrome(executable_path=self.web_driver_path)
-
-        # wait
-        time.sleep(2)
-
         # go to search url
-        driver.get(search_url)
+        self.driver.get(search_url)
+
+        time.sleep(3)
+
+        print('Loading people...')
+
+        # get all data
+        self.scroll_to_bottom()
 
 
 a = FindPerson(web_driver_path=f'{os.getcwd()}\\chromedriver.exe')
